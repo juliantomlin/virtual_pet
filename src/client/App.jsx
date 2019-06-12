@@ -51,14 +51,30 @@ export default class App extends Component {
 
 
   login = (username) => {
-    this.setState({
-      user: username
-    })
+    fetch("/api/getPets")
+      .then(res => res.json())
+      .then(pets => {
+        this.setState({
+          petlist: pets.pets.reverse(),
+        });
+      });
+    fetch('/api/getJobs')
+      .then(res => res.json())
+      .then(jobs => this.setState({ jobList: jobs.reverse() }))
+    fetch('/api/getUser')
+      .then(res => res.json())
+      .then(currentUser => this.setState({ user: currentUser}))
   }
 
   logout = () => {
     this.setState({
-      user: ""
+      user: "",
+      petlist: [],
+      jobList: [],
+      pet1: "",
+      pet2: "",
+      buying: false,
+      profile: false
     })
   }
 
