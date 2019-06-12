@@ -37,32 +37,40 @@ app.use(express.static("dist"));
 
 app.get("/api/getPets", (req, res) => {
   const refrenceTime = new Date().getTime();
-
-  knex.from("jobs")
-    .where("user_id", req.session.user_id)
-    .select("*")
-    .orderBy("time_at_birth")
-    .rightJoin('pets', function(){
-      this.on('job_start_time', '=', function(){
-          this.select('job_start_time')
-          .from('jobs')
-          .whereRaw('pet_id = pets.id')
-          .orderBy('job_start_time', 'desc')
-          .limit(1)
+  if (req.session.user_id) {
+    knex.from("jobs")
+      .where("user_id", req.session.user_id)
+      .select("*")
+      .orderBy("time_at_birth")
+      .rightJoin('pets', function(){
+        this.on('job_start_time', '=', function(){
+            this.select('job_start_time')
+            .from('jobs')
+            .whereRaw('pet_id = pets.id')
+            .orderBy('job_start_time', 'desc')
+            .limit(1)
+        })
       })
-    })
-    .asCallback(function(err, pets) {
-      res.status(201).send({ pets, refrenceTime });
-    });
+      .asCallback(function(err, pets) {
+        res.status(200).send({ pets, refrenceTime });
+      });
+  } else {
+    res.status(200).send({pets: [], refrenceTime: refrenceTime})
+  }
+
 });
 
 app.get("/api/getUser", (req, res) => {
-  knex.from("users")
-      .where("id", req.session.user_id)
-      .first("*")
-      .asCallback(function(err, user) {
-        res.status(201).send(user)
-      })
+  if (req.session.user_id) {
+    knex.from("users")
+        .where("id", req.session.user_id)
+        .first("*")
+        .asCallback(function(err, user) {
+          res.status(200).send(user)
+        })
+  } else {
+    res.status(204).send([])
+  }
 })
 
 app.get("/api/getPets/:petid", (req, res) => {
@@ -101,7 +109,7 @@ app.post("/api/register", (req, res, username) => {
       .select("*")
       .asCallback((err, user) => {
         if (user.length) {
-          res.status(409).send()
+          res.status(400).send("exists")
         } else {
 
           knex("users")
@@ -234,22 +242,26 @@ app.post("/api/pets/:id/release", (req, res) => {
             res.status(204).send();
           });
       } else {
-        res.status(401)
+        res.status(401).send()
       }
     });
 });
 
 app.get("/api/getJobs", (req, res) => {
-  knex
-    .from("pets")
-    .join("jobs", "pets.id", "=", "jobs.pet_id")
-    .where("user_id", req.session.user_id)
-    .andWhere("job_end_time", null)
-    .select("*")
-    .asCallback(function(err, jobs) {
+  if (req.session.user_id){
+    knex
+      .from("pets")
+      .join("jobs", "pets.id", "=", "jobs.pet_id")
+      .where("user_id", req.session.user_id)
+      .andWhere("job_end_time", null)
+      .select("*")
+      .asCallback(function(err, jobs) {
 
-      res.send(jobs);
-    });
+        res.status(200).send(jobs);
+      });
+  } else {
+    res.status(204).send([])
+  }
 });
 
 //feed a pet

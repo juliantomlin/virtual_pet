@@ -21,16 +21,32 @@ class Login extends Component {
   }
 
 onClickLogin = () => {
-  axios.post("/api/login", {username: this.state.username, password: this.state.password}).then(response => {
-      this.props.login(response.data)
-      return this.props.history.push('/')
-  })
+  axios.post("/api/login", {username: this.state.username, password: this.state.password})
+    .catch(function(err){
+      if (err.response){
+        alert("incorrect username or password")
+      }
+    })
+    .then(response => {
+      if (response) {
+        this.props.login(response.data)
+        return this.props.history.push('/')
+      }
+    })
 }
 
 onClickRegister = () => {
-  axios.post("/api/register", {username: this.state.username, password: this.state.password}).then(response => {
-      this.props.login(response.data)
-      return this.props.history.push('/')
+  axios.post("/api/register", {username: this.state.username, password: this.state.password})
+    .catch(function(err){
+      if (err.response){
+        alert("username already exists")
+      }
+    })
+    .then(response => {
+      if (response) {
+        this.props.login(response.data)
+        return this.props.history.push('/')
+      }
   })
 }
   // if successful then do this stuff

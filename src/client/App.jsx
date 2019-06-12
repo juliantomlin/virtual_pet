@@ -128,50 +128,66 @@ export default class App extends Component {
     /* Going to want to make an axios request */
     /* PUT /pets/${pet.id} */
     const petAssign = (pet.pet_id ? pet : Object.assign(pet, {pet_id: pet.id}))
-    axios.put(`/api/pets/${petAssign.pet_id}`, petAssign).then(response => {
-      this.setState(prev => {
-        const index = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == petAssign.pet_id) : (item.id == petAssign.pet_id));
-        const jobIndex = prev.jobList.findIndex(item => item.id == pet.id)
+    axios.put(`/api/pets/${petAssign.pet_id}`, petAssign)
+    .catch(function(err){
+      if (err.response){
+        alert("Only the owener can change pet's name")
+      }
+    })
+    .then(response => {
+      if(response){
+        this.setState(prev => {
+          const index = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == petAssign.pet_id) : (item.id == petAssign.pet_id));
+          const jobIndex = prev.jobList.findIndex(item => item.id == pet.id)
 
-        if (jobIndex >= 0) {
-          return {
-            petlist: [
-              ...this.state.petlist.slice(0, index),
-              petAssign,
-              ...this.state.petlist.slice(index + 1)
-            ],
-            jobList: [
-              ...this.state.jobList.slice(0, jobIndex),
-              petAssign,
-              ...this.state.jobList.slice(jobIndex + 1)
-            ]
-          }
-        } else {
-          return {
-            petlist: [
-              ...this.state.petlist.slice(0, index),
-              petAssign,
-              ...this.state.petlist.slice(index + 1)
-            ]
-          }
-        };
-      });
+          if (jobIndex >= 0) {
+            return {
+              petlist: [
+                ...this.state.petlist.slice(0, index),
+                petAssign,
+                ...this.state.petlist.slice(index + 1)
+              ],
+              jobList: [
+                ...this.state.jobList.slice(0, jobIndex),
+                petAssign,
+                ...this.state.jobList.slice(jobIndex + 1)
+              ]
+            }
+          } else {
+            return {
+              petlist: [
+                ...this.state.petlist.slice(0, index),
+                petAssign,
+                ...this.state.petlist.slice(index + 1)
+              ]
+            }
+          };
+        });
+      }
     });
   }
 
   // changes the owener ID of pet to negative
 
   deletePet(petid) {
-    axios.post(`/api/pets/${petid}/release`).then(response => {
-      this.setState(prev => {
-        const index = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == petid) : (item.id == petid))
-        return {
-          petlist: [
-            ...this.state.petlist.slice(0, index),
-            ...this.state.petlist.slice(index + 1)
-          ]
-        }
-      })
+    axios.post(`/api/pets/${petid}/release`)
+    .catch(function(err){
+      if (err.response){
+        alert("Only the owner can release a pet")
+      }
+    })
+    .then(response => {
+      if (response){
+        this.setState(prev => {
+          const index = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == petid) : (item.id == petid))
+          return {
+            petlist: [
+              ...this.state.petlist.slice(0, index),
+              ...this.state.petlist.slice(index + 1)
+            ]
+          }
+        })
+      }
     })
   }
     //   .then(pets => {
