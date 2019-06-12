@@ -55,8 +55,6 @@ export default class App extends Component {
     this.setState({
       user: username
     })
-
-
   }
 
   // takes any new pet and adds it to the petlist

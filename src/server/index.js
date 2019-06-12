@@ -5,6 +5,14 @@ const ENV = process.env.ENV || "development";
 
 const app = express();
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt')
+const cookieSession = require('cookie-session')
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1'],
+}))
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -83,8 +91,7 @@ app.get("/api/getPets/:petid", (req, res) => {
 
 })
 
-app.post("/api/login", (req, res, username) => {
- console.log(req.body)
+app.post("/api/register", (req, res, username) => {
 
   knex
     .from("users")
@@ -92,32 +99,41 @@ app.post("/api/login", (req, res, username) => {
     .select("*")
     .asCallback((err, user) => {
       if (user.length) {
-        res.send(user[0])
+        res.status(409)
       } else {
 
         knex("users")
-        .insert({name: req.body.username, gold: 100000}).returning("*")
-        .asCallback((err, user) => {
+          .insert({name: req.body.username, gold: 100000, password: bcrypt.hashSync(req.body.password, 10)})
+          .returning(["name", "gold", "id"])
+          .asCallback((err, user) => {
+            req.session.user_id = user[0].id
+            res.status(201).send({name: user[0].name, gold: user[0].gold})
 
-          const newPets = [newRandomPet(user[0]), newRandomPet(user[0]), newRandomPet(user[0])]
-          console.log("newPets", newPets)
-          console.log("user", user)
-          knex("pets")
-            .insert(newPets).asCallback(function(err) {
-              console.log("error", err)
+          })
+      }
+    })
+})
 
-              res.status(201).send(user[0])
-            })
+app.post("/api/login", (req, res, username) => {
 
-      })
-    }
+  knex
+    .from("users")
+    .where("name", req.body.username)
+    .select("*")
+    .asCallback((err, user) => {
+      if (bcrypt.compareSync(req.body.password, user[0].password)) {
+        req.session.user_id = user[0].id
+        res.status(201).send({name: user[0].name, gold: user[0].gold})
+      } else {
+        res.status(409)
+      }
+    })
 })
 
 
   // .then(function (username) {
   //   res.send(username)
   // })
-})
 
 app.post("/api/breed", (req, res) => {
   if (req.body.pet1.pet_id != req.body.pet2.pet_id){

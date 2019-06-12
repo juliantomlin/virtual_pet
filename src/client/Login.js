@@ -9,7 +9,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: ""
+      username: "",
+      password: ""
 
     }
   }
@@ -20,21 +21,34 @@ class Login extends Component {
   }
 
 onClickLogin = () => {
-  axios.post("/api/login", {username: this.state.username}).then(response => {
+  axios.post("/api/login", {username: this.state.username, password: this.state.password}).then(response => {
     console.log("response", response)
       this.props.login(response.data)
-      return this.props.history.push('/?user=kat')
-    // console.log("response", response.data)
+      return this.props.history.push('/')
   })
+}
 
+onClickRegister = () => {
+  axios.post("/api/register", {username: this.state.username, password: this.state.password}).then(response => {
+    console.log("response", response)
+      this.props.login(response.data)
+      return this.props.history.push('/')
+  })
+}
   // if successful then do this stuff
   // this.props.login(this.state.username)
   // this.props.history.push('/')
-}
+
 
 onChangeUsername = (e) => {
   if (e.target.value) {
-  this.setState({username: e.target.value})
+    this.setState({username: e.target.value})
+  }
+}
+
+onChangePassword = (e) => {
+  if (e.target.value) {
+    this.setState({password: e.target.value})
   }
 }
 
@@ -43,8 +57,10 @@ onChangeUsername = (e) => {
       <div className="box">
         <h2>Welcome to Selection!</h2>
         <br />
-        Username <input type="username" name="username" className="email" onChange={this.onChangeUsername}/><br /><br />
+        Username <input type="username" name="username" className="email" onChange={this.onChangeUsername}/>
+        password <input type="password" name="password" className="email" onChange={this.onChangePassword}/><br /><br />
         <button className="login-button" onClick={this.onClickLogin}>Login</button>
+        <button className="login-button" onClick={this.onClickRegister}>Register</button>
       </div>
     )
   }

@@ -91,6 +91,13 @@ top: 160px;
   border-radius: 4px;
 }
 
+.login-button {
+  margin-left: .5em;
+  margin-right: .5em;
+  padding: 5px;
+  width: 86px;
+}
+
 /*breed page */
 
 .breed-first-content {
