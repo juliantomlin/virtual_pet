@@ -73,6 +73,15 @@ app.get("/api/getUser", (req, res) => {
   }
 })
 
+app.get("/api/getUsers/", (req, res) => {
+  knex("users")
+    .select("id", "name", "gold")
+    .orderBy("gold", "desc")
+    .asCallback(function(err, users){
+      res.status(200).send(users)
+    })
+})
+
 app.get("/api/getPets/:petid", (req, res) => {
   console.log(req.params.pet)
   const refrenceTime = new Date().getTime();

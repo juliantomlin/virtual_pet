@@ -408,7 +408,7 @@ export default class App extends Component {
               />
               );
           }}/>
-          <Route path="/browseusers" component={BrowseUsers}/>
+          <Route path="/users" component={BrowseUsers}/>
 
           <Route path="/login" render={() => { return <Login login={this.login} /> }} />
 
