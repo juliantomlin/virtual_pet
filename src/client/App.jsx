@@ -182,22 +182,24 @@ export default class App extends Component {
   // creates a new entery in the jobs table for the petID
 
   sendToWork = (pet) => {
-    console.log("try to send to work: ", pet)
-    const petAssign = (pet.pet_id ? pet : Object.assign(pet, {pet_id: pet.id}))
-    console.log("try to send to work: ", petAssign)
-    makeNewJob (petAssign, (job) => {
-      this.setState(prev => {
-      const index = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == job.pet_id) : (item.id == job.pet_id));
-        return {
-          petlist: [
-            ...this.state.petlist.slice(0, index),
-            job,
-            ...this.state.petlist.slice(index + 1)
-            ],
-          jobList: [job, ...prev.jobList]
-        }
-      })
-    });
+    if (this.state.jobList.length >= 3){
+      alert("Only 3 jobs allowed at one time")
+    } else {
+      const petAssign = (pet.pet_id ? pet : Object.assign(pet, {pet_id: pet.id}))
+      makeNewJob (petAssign, (job) => {
+        this.setState(prev => {
+        const index = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == job.pet_id) : (item.id == job.pet_id));
+          return {
+            petlist: [
+              ...this.state.petlist.slice(0, index),
+              job,
+              ...this.state.petlist.slice(index + 1)
+              ],
+            jobList: [job, ...prev.jobList]
+          }
+        })
+      });
+    }
   }
 
   returnFromWork(job) {

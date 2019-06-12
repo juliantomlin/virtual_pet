@@ -5,6 +5,7 @@ const jobPayPerStat = require("./job_pay_per_stat.js");
 const caculateJobPay = function(time, payRate, jobStatus) {
   const maxHunger = 200;
   const maxHappy = 200;
+  const payModifier = 10
 
   const [job_multiplier_str, job_multiplier_int] = payRate;
 
@@ -25,7 +26,7 @@ const caculateJobPay = function(time, payRate, jobStatus) {
   const timer = (time - job_start_time) / 1000;
 // payoutRatio is how much money the pet makes per second - when at full happiness/hunger
   const payoutRatio =
-    job_multiplier_str * strength_gene + job_multiplier_int * intelligence_gene;
+    (job_multiplier_str * strength_gene + job_multiplier_int * intelligence_gene) / payModifier;
 // calculates each pets hunger and happiness since job start
   const status = caculateHungerHappy(
     time,

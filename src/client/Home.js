@@ -23,7 +23,7 @@ class Home extends Component {
         <div className="header-container">
           <div className="header">
 
-              <div className="user-info"> Ash
+              <div className="user-info"> {this.props.username.name}
 
                 <img className="avatar-img" src="../../lib/img/avatar-black.png" />
 

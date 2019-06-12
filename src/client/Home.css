@@ -33,6 +33,10 @@ top: 160px;
   background-size: 24px 24px;
 }
 
+.header-container {
+  margin-left: 3em;
+}
+
 .name {
   font-family: "Archivo Narrow", sans-serif;
   font-size: 2em;
