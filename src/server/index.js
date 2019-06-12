@@ -39,7 +39,7 @@ app.get("/api/getPets", (req, res) => {
   const refrenceTime = new Date().getTime();
 
   knex.from("jobs")
-    .where("user_id", 1)
+    .where("user_id", req.session.user_id)
     .select("*")
     .orderBy("time_at_birth")
     .rightJoin('pets', function(){
@@ -58,7 +58,7 @@ app.get("/api/getPets", (req, res) => {
 
 app.get("/api/getUser", (req, res) => {
   knex.from("users")
-      .where("id", 1)
+      .where("id", req.session.user_id)
       .first("*")
       .asCallback(function(err, user) {
         res.status(201).send(user)
@@ -92,42 +92,50 @@ app.get("/api/getPets/:petid", (req, res) => {
 })
 
 app.post("/api/register", (req, res, username) => {
+  if (!req.body.email || !req.body.password) {
+    res.sendStatus(400)
+  } else {
+    knex
+      .from("users")
+      .where("name", req.body.username)
+      .select("*")
+      .asCallback((err, user) => {
+        if (user.length) {
+          res.status(409)
+        } else {
 
-  knex
-    .from("users")
-    .where("name", req.body.username)
-    .select("*")
-    .asCallback((err, user) => {
-      if (user.length) {
-        res.status(409)
-      } else {
+          knex("users")
+            .insert({name: req.body.username, gold: 100000, password: bcrypt.hashSync(req.body.password, 10)})
+            .returning(["name", "gold", "id"])
+            .asCallback((err, user) => {
+              req.session.user_id = user[0].id
+              res.status(201).send({name: user[0].name, gold: user[0].gold})
 
-        knex("users")
-          .insert({name: req.body.username, gold: 100000, password: bcrypt.hashSync(req.body.password, 10)})
-          .returning(["name", "gold", "id"])
-          .asCallback((err, user) => {
-            req.session.user_id = user[0].id
-            res.status(201).send({name: user[0].name, gold: user[0].gold})
+            })
+        }
+      })
+  }
 
-          })
-      }
-    })
 })
 
 app.post("/api/login", (req, res, username) => {
+  if (!req.body.email || !req.body.password) {
+    res.sendStatus(400)
+  } else {
+    knex
+      .from("users")
+      .where("name", req.body.username)
+      .select("*")
+      .asCallback((err, user) => {
+        if (bcrypt.compareSync(req.body.password, user[0].password)) {
+          req.session.user_id = user[0].id
+          res.status(201).send({name: user[0].name, gold: user[0].gold})
+        } else {
+          res.status(409)
+        }
+      })
+  }
 
-  knex
-    .from("users")
-    .where("name", req.body.username)
-    .select("*")
-    .asCallback((err, user) => {
-      if (bcrypt.compareSync(req.body.password, user[0].password)) {
-        req.session.user_id = user[0].id
-        res.status(201).send({name: user[0].name, gold: user[0].gold})
-      } else {
-        res.status(409)
-      }
-    })
 })
 
 
@@ -146,7 +154,7 @@ app.post("/api/breed", (req, res) => {
         if (err) {
           console.log("breeding err: ", err)
         }
-        const baby = breed(1, mates[0], mates[1]);
+        const baby = breed(req.session.user_id, mates[0], mates[1]);
         knex
           .insert(baby)
           .into("pets")
@@ -155,13 +163,13 @@ app.post("/api/breed", (req, res) => {
             knex
               .from("users")
               .select("gold")
-              .where("id", 1)
+              .where("id", req.session.user_id)
               .asCallback(function(err, gold) {
                 knex
                   .from("users")
                   .update({"gold": gold[0].gold - 20000})
                   .returning("gold")
-                  .where("id", 1)
+                  .where("id", req.session.user_id)
                   .asCallback(function(err, newGold) {
                     console.log("newGold", newGold)
                     const withId = Object.assign(newPet[0], {pet_id: newPet[0].id})
@@ -216,7 +224,7 @@ app.get("/api/getJobs", (req, res) => {
   knex
     .from("pets")
     .join("jobs", "pets.id", "=", "jobs.pet_id")
-    .where("user_id", 1)
+    .where("user_id", req.session.user_id)
     .select("*")
     .asCallback(function(err, jobs) {
 
@@ -442,7 +450,7 @@ app.post("/api/jobs/:id", (req, res) => {
 
 app.post("/api/users/:userId/buypet", (req, res) => {
   console.log("new pet")
-  const newPet = newRandomPet(req.params.userId)
+  const newPet = newRandomPet(req.session.user_id)
   knex
     .insert(newPet)
     .into("pets")
@@ -450,12 +458,12 @@ app.post("/api/users/:userId/buypet", (req, res) => {
     .asCallback(function(err, newPet) {
       knex
       .from("users")
-      .where("id", 1)
+      .where("id", req.session.user_id)
       .select("gold")
       .asCallback(function(err, gold) {
         knex
         .from("users")
-        .where("id", 1)
+        .where("id", req.session.user_id)
         .update({"gold": gold[0].gold - 20000})
         .returning("*")
       .asCallback(function(err, userUpdate) {
