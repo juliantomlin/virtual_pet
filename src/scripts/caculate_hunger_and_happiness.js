@@ -13,7 +13,7 @@ const caculateHungerHappy = function(
 
   let maxHunger = 200;
   let maxHappy = 200;
-  let statusSpeed = 10;
+  let statusSpeed = 1000;
 // calculates how much hunger was lost either at end of a job or the last feeding
   let hunger = ((hungerStart - (str / statusSpeed) * timer) / maxHunger) * 100;
 // when hunger is 50%, returns the time

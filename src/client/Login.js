@@ -22,7 +22,6 @@ class Login extends Component {
 
 onClickLogin = () => {
   axios.post("/api/login", {username: this.state.username, password: this.state.password}).then(response => {
-    console.log("response", response)
       this.props.login(response.data)
       return this.props.history.push('/')
   })
@@ -30,7 +29,6 @@ onClickLogin = () => {
 
 onClickRegister = () => {
   axios.post("/api/register", {username: this.state.username, password: this.state.password}).then(response => {
-    console.log("response", response)
       this.props.login(response.data)
       return this.props.history.push('/')
   })

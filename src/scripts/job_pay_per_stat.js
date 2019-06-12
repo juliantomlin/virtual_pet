@@ -1,7 +1,7 @@
 // as the pet gets hungrier and unhappier it earns less money per second while at work
 const jobPayPerStat = function (timer, statStart, gene, payoutRatio, maxStat, status) {
 
-  const statusSpeed = 10
+  const statusSpeed = 1000
 
   const geneDecay = (gene/statusSpeed)/2
 // calculates the decrease in pay as a quadratic, that has been doubled in size bug 1/2'd in return - in order to make the max

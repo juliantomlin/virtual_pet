@@ -51,9 +51,14 @@ export default class App extends Component {
 
 
   login = (username) => {
-    console.log("user: ", username)
     this.setState({
       user: username
+    })
+  }
+
+  logout = () => {
+    this.setState({
+      user: ""
     })
   }
 
@@ -355,7 +360,7 @@ export default class App extends Component {
         {/*Delete*/}
        {/* <Route path='*' component={App}/>*/}
       {/*End Delete*/}
-        <Navbar user={this.state.user} />
+        <Navbar user={this.state.user} logout={this.logout}/>
         <Switch>
           <Route path="/petprofile/:petid" render={(props) => {
             return (<PetProfile {...props}

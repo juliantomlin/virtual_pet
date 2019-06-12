@@ -27,7 +27,7 @@ const newRandomPet = require('../scripts/new_random_pet.js')
 
 const maxHunger = 200;
 const maxHappy = 200;
-const statusSpeed = 10
+const statusSpeed = 1000
 
 const payRate = [[5,1], [3,3], [1,5]]
 const foodMenu = [{food: 10, price: 125}, {food: 30, price: 250}, {food: 50, price: 350}]
@@ -92,7 +92,7 @@ app.get("/api/getPets/:petid", (req, res) => {
 })
 
 app.post("/api/register", (req, res, username) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.username || !req.body.password) {
     res.sendStatus(400)
   } else {
     knex
@@ -119,7 +119,7 @@ app.post("/api/register", (req, res, username) => {
 })
 
 app.post("/api/login", (req, res, username) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.username || !req.body.password) {
     res.sendStatus(400)
   } else {
     knex
@@ -136,6 +136,11 @@ app.post("/api/login", (req, res, username) => {
       })
   }
 
+})
+
+app.post("/api/logout", (req, res) => {
+  req.session = null
+  res.status(204).send()
 })
 
 
