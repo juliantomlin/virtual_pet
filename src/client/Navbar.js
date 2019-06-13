@@ -44,15 +44,17 @@ class Navbar extends Component {
             <Link to="/" className="selection">Selection</Link>
             {this.props.user &&
               <div className="nav-links">
-                <Link to="/"><h3>{user} | </h3><div className='money-counter'><Odometer  value={money} format="(,ddd)" /></div><img className="coin" src="../../lib/img/coin3.png" /></Link>
-                <Link to="/users"><h3>Browse Users</h3></Link>
-                <a onClick={() => {this.onClickLogout()}}> <h3>Logout</h3></a>
+                <Link to="/users"><h4>Browse Users</h4></Link>
+                <Link to="/about"><h4>About</h4></Link>
+                <Link to="/"><h4>{user} | </h4><div className='money-counter'><Odometer  value={money} format="(,ddd)" /></div><img className="coin" src="../../lib/img/coin3.png" /></Link>
+                <a onClick={() => {this.onClickLogout()}}> <h4>Logout</h4></a>
               </div>
             }
             {!this.props.user &&
               <div className="nav-links">
-                <Link to="/users"><h3>Browse Users</h3></Link>
-                <Link to="/login"> <h3>Login</h3></Link>
+                <Link to="/users"><h4>Browse Users</h4></Link>
+                <Link to="/about"><h4>About</h4></Link>
+                <Link to="/login"> <h4>Login</h4></Link>
               </div>
             }
           </div>

@@ -21,6 +21,7 @@ import CurrentJobs from "./CurrentJobs.js";
 import BuyNewPet from "./BuyNewPet";
 import MateFound from "./MateFound";
 import UserProfile from "./UserProfile";
+import About from "./About"
 
 import { breedNewPet, makeNewJob, endJob, newFeedEvent, buyPetRequest } from "../services";
 
@@ -418,6 +419,8 @@ export default class App extends Component {
           }}/>
 
           <Route path="/users" component={BrowseUsers}/>
+
+          <Route path="/about" component={About}/>
 
           <Route path="/login" render={() => { return <Login login={this.login} /> }} />
 

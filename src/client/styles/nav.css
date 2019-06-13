@@ -41,13 +41,10 @@
 }
 
 .money-counter {
-  margin-top: 9px;
+  font-size: 18px;
   margin-left: 5px;
 }
 
-.coin {
-  margin-top: 4px;
-}
 
 .nav-links a:hover {
   color: white;
@@ -56,7 +53,8 @@
 }
 
 .coin {
-  height: 30px;
-  margin-bottom: 2.5px;
+  height: 24px;
+  width: 24px;
+  margin-bottom: 5px;
 
 }

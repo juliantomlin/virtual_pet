@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from "react-router-dom";
 
-import './Home.css'
+import './app.css'
 
 export default class BrowseUsers extends Component {
   constructor() {
@@ -24,13 +24,8 @@ export default class BrowseUsers extends Component {
 
   render () {
     return (
-    <div className="col-xs-12 bg-3 text-center">
-      <div className="row">
-      <div className="col-sm-6">
-      <div align="left">
-      <h2 className="title-username">USERNAMES</h2>
-      <br />
-    <div className="username-list">
+    <div className="about-page">
+      <h1 className="title-username">USERNAMES</h1>
     {this.state.userList.map((user, index) => {
       return (
         <Link to={"/users/" + user.id} key={"user" + index} className="user-names">
@@ -38,8 +33,7 @@ export default class BrowseUsers extends Component {
         </Link>
         )
     })}
-    </div></div></div></div>
-  </div>
+    </div>
   )
 }
 
