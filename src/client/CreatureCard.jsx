@@ -138,7 +138,7 @@ class CreatureCard extends Component {
                 </div> }
               <h4>Str: {petAssign.strength_gene}</h4>
             </div>
-            {this.state.isHovering && !working && (
+            {this.state.isHovering && !working && this.props.owner && (
               <HoverOver
                 onSelect={this.props.onSelect}
                 petStatus={petAssign}

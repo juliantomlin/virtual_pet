@@ -33,7 +33,9 @@ export default class BrowseUsers extends Component {
     <div className="username-list">
     {this.state.userList.map((user, index) => {
       return (
-        <Link to={"/users/" + user.id} key={"user" + index} className="user-names"><h4>{(index + 1) + " - " + user.name + " | " + (Number(user.gold).toLocaleString())}</h4></Link>
+        <Link to={"/users/" + user.id} key={"user" + index} className="user-names">
+          <h4>{(index + 1) + " - " + user.name + " | " + (Number(user.gold).toLocaleString())}</h4>
+        </Link>
         )
     })}
     </div></div></div></div>

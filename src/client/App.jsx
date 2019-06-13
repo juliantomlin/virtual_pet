@@ -20,6 +20,7 @@ import Creature from "./CreatureImg.jsx";
 import CurrentJobs from "./CurrentJobs.js";
 import BuyNewPet from "./BuyNewPet";
 import MateFound from "./MateFound";
+import UserProfile from "./UserProfile";
 
 import { breedNewPet, makeNewJob, endJob, newFeedEvent, buyPetRequest } from "../services";
 
@@ -408,6 +409,14 @@ export default class App extends Component {
               />
               );
           }}/>
+
+          <Route path="/users/:userid" render={(props) => {
+            return (<UserProfile {...props}
+          time={this.state.time}
+              />
+              );
+          }}/>
+
           <Route path="/users" component={BrowseUsers}/>
 
           <Route path="/login" render={() => { return <Login login={this.login} /> }} />

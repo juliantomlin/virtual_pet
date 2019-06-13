@@ -57,7 +57,6 @@ app.get("/api/getPets", (req, res) => {
   } else {
     res.status(200).send({pets: [], refrenceTime: refrenceTime})
   }
-
 });
 
 app.get("/api/getUser", (req, res) => {
@@ -82,8 +81,32 @@ app.get("/api/getUsers/", (req, res) => {
     })
 })
 
+app.get("/api/getUsers/:userId", (req, res) => {
+  knex.from("jobs")
+    .where("user_id", req.params.userId)
+    .select("*")
+    .orderBy("time_at_birth")
+    .rightJoin('pets', function(){
+      this.on('job_start_time', '=', function(){
+          this.select('job_start_time')
+          .from('jobs')
+          .whereRaw('pet_id = pets.id')
+          .orderBy('job_start_time', 'desc')
+          .limit(1)
+      })
+    })
+    .asCallback(function(err, pets) {
+      knex.from("users")
+        .where("id", req.params.userId)
+        .select("name", "gold")
+        .asCallback(function(err, host){
+          console.log(err, host)
+          res.status(200).send({pets, host});
+        })
+    });
+});
+
 app.get("/api/getPets/:petid", (req, res) => {
-  console.log(req.params.pet)
   const refrenceTime = new Date().getTime();
   knex
     .from("pets")
