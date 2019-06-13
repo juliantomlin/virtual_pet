@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const ENV = process.env.ENV || "development";
+const path = require('path')
 
 const app = express();
 const bodyParser = require("body-parser");
@@ -559,6 +560,11 @@ app.post("/api/users/:userId/buypet", (req, res) => {
   }
 })
 
+app.use(express.static(path.join(__dirname, 'src/client')))
+
+app.get('*', (req, res) => {
+  res.sendFile(__dirname+'../../public/index.html')
+})
 
 app.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
