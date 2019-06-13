@@ -85,7 +85,7 @@
       return (
 
     <div className='petProfile'>
-      <div className="back-button"><Link to="/"><button className="breed-button">Back</button></Link><br /><br /><br /><br /></div>
+      <div className="back-button"><button onClick={this.props.history.goBack} className="breed-button">Back</button><br /><br /><br /><br /></div>
         <div className="pet-profile-content">
           <div className="pet-profile-creature-image animate">
                     <Creature
