@@ -77,7 +77,14 @@ export const newFeedEvent = (pet, foodType, callback) => {
 export const buyPetRequest = (user, callback) => {
   axios
     .post(`/api/users/${user}/buypet`, {})
+    .catch(function(err) {
+      if (err.response){
+        alert("You must be logged in to buy a pet")
+      }
+    })
     .then(response => {
-      callback(response.data)
+      if (response){
+        callback(response.data)
+      }
     })
 }

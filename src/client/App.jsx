@@ -246,7 +246,7 @@ export default class App extends Component {
     const petAssign = (pet.pet_id ? pet : Object.assign(pet, {pet_id: pet.id}))
     newFeedEvent(petAssign, foodType, (petUpdate) => {
       this.setState(prev => {
-        const petIndex = prev.petlist.findIndex(item => item.id == petAssign.pet_id)
+        const petIndex = prev.petlist.findIndex(item => item.pet_id ? (item.pet_id == petAssign.pet_id) : (item.id == petAssign.pet_id))
         return {
           petlist: [
             ...this.state.petlist.slice(0, petIndex),
